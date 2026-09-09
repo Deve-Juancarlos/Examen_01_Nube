@@ -10,7 +10,8 @@ def conectar_db():
         if db_url.startswith('postgres://'):
             db_url = db_url.replace('postgres://', 'postgresql://', 1)
         if 'sslmode' not in db_url:
-            db_url += '?sslmode=require'
+            separator = '&' if '?' in db_url else '?'
+            db_url += f'{separator}sslmode=require'
         return psycopg2.connect(db_url)
     raise Exception('DATABASE_URL no está configurada')
 
