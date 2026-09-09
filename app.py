@@ -9,24 +9,30 @@ def conectar_db():
     if db_url:
         if db_url.startswith('postgres://'):
             db_url = db_url.replace('postgres://', 'postgresql://', 1)
+        if 'sslmode' not in db_url:
+            db_url += '?sslmode=require'
         return psycopg2.connect(db_url)
     raise Exception('DATABASE_URL no está configurada')
 
 def init_db():
-    conn = conectar_db()
-    with conn.cursor() as cursor:
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS personas (
-                id SERIAL PRIMARY KEY,
-                dni VARCHAR(20) NOT NULL UNIQUE,
-                nombre VARCHAR(100) NOT NULL,
-                apellido VARCHAR(100) NOT NULL,
-                direccion TEXT,
-                telefono VARCHAR(20)
-            );
-        """)
-    conn.commit()
-    conn.close()
+    try:
+        conn = conectar_db()
+        with conn.cursor() as cursor:
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS personas (
+                    id SERIAL PRIMARY KEY,
+                    dni VARCHAR(20) NOT NULL UNIQUE,
+                    nombre VARCHAR(100) NOT NULL,
+                    apellido VARCHAR(100) NOT NULL,
+                    direccion TEXT,
+                    telefono VARCHAR(20)
+                );
+            """)
+        conn.commit()
+        conn.close()
+        print('Base de datos inicializada correctamente')
+    except Exception as e:
+        print(f'Error al inicializar la BD: {e}')
 
 def crear_persona(dni, nombre, apellido, direccion, telefono):
     conn = conectar_db()
@@ -76,7 +82,8 @@ def eliminar_registro(dni):
     conn.close()
     return redirect(url_for('administrar'))
 
+init_db()
+
 if __name__ == '__main__':
-    init_db()
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
