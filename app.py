@@ -73,13 +73,29 @@ def administrar():
     registros = obtener_registros()
     return render_template('administrar.html', personas=registros, registros=registros)
 
-@app.route('/eliminar/<dni>', methods=['POST'])
-def eliminar_registro(dni):
+def eliminar_persona(id):
     conn = conectar_db()
-    with conn.cursor() as cursor:
-        cursor.execute("DELETE FROM personas WHERE dni = %s;", (dni,))
-    conn.commit()
-    conn.close()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("DELETE FROM personas WHERE id = %s;", (id,))
+            if cursor.rowcount == 0:
+                conn.rollback()
+                return False
+        conn.commit()
+        return True
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+
+@app.route('/eliminar/<int:id>', methods=['POST'])
+def eliminar_registro(id):
+    try:
+        if not eliminar_persona(id):
+            return "Registro no encontrado", 404
+    except Exception as e:
+        return f"Error al eliminar: {e}", 500
     return redirect(url_for('administrar'))
 
 init_db()

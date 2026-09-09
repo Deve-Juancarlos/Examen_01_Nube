@@ -1,136 +1,40 @@
-/* static/styles.css */
+/* static/styles.css
+   Estilos complementarios - el resto se aplica via Tailwind CDN
+*/
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    margin: 0;
-    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-.container {
-    max-width: 800px;
-    margin: 50px auto;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+/* Tabla responsive: en móvil cada celda se muestra como bloque con etiqueta */
+@media (max-width: 639px) {
+    table.min-w-full tbody tr {
+        border: 1px solid #e2e8f0;
+        border-radius: 0.75rem;
+        margin-bottom: 0.75rem;
+        padding: 0.5rem 0;
+        background: #fff;
+    }
+    table.min-w-full tbody td {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
 }
 
-h1 {
-    text-align: center;
+/* Pequeño breakpoint personalizado xs (Tailwind CDN no incluye 480px por defecto) */
+@media (min-width: 480px) {
+    .xs\:inline {
+        display: inline !important;
+    }
 }
 
-.separator {
-    margin-bottom: 20px;
+/* Animación de entrada del modal */
+#modal {
+    animation: fadeIn 0.2s ease-out;
 }
 
-/* Enlaces y navegación */
-.administrar-link {
-    display: inline-block;
-    margin-bottom: 15px;
-    color: #007bff;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.administrar-link:hover {
-    text-decoration: underline;
-}
-
-/* Formulario */
-.form-group {
-    margin-bottom: 20px;
-}
-
-label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-}
-
-/* Botones principales */
-button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-/* Botones de acción dentro de tablas (Eliminar) */
-table form button {
-    background-color: #dc3545;
-    padding: 6px 12px;
-}
-
-table form button:hover {
-    background-color: #bd2130;
-}
-
-/* Modal de confirmación/éxito */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 400px;
-    border-radius: 5px;
-    text-align: center;
-}
-
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-/* Estilos para Tablas (`administrar.html`) */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-}
-
-table th, table td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: left;
-}
-
-table th {
-    background-color: #f2f2f2;
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.96); }
+    to   { opacity: 1; transform: scale(1); }
 }

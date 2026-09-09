@@ -4,48 +4,151 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administrar Registros</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50:  '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-    <div class="container">
-        <h1>Administrar Registros</h1>
+<body class="min-h-screen bg-gradient-to-br from-slate-100 via-slate-50 to-blue-50 antialiased">
 
-        <a href="/" class="administrar-link">Volver al Registro</a>
-        <div class="separator"></div>
+    <header class="bg-white/80 backdrop-blur shadow-sm sticky top-0 z-10">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+            <h1 class="text-lg sm:text-xl font-bold text-slate-800">Administrar Registros</h1>
+            <a href="/"
+               class="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium
+                      text-brand-700 bg-brand-50 hover:bg-brand-500 hover:text-white
+                      transition-colors duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+                </svg>
+                <span>Volver</span>
+            </a>
+        </div>
+    </header>
 
-        {% if registros %}
-        <table>
-            <thead>
-                <tr>
-                    <th>DNI</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Dirección</th>
-                    <th>Teléfono</th>
-                    <th>Acción</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for registro in registros %}
-                <tr>
-                    <td>{{ registro[1] }}</td>
-                    <td>{{ registro[2] }}</td>
-                    <td>{{ registro[3] }}</td>
-                    <td>{{ registro[4] }}</td>
-                    <td>{{ registro[5] }}</td>
-                    <td>
-                        <form action="/eliminar/{{ registro[1] }}" method="POST"
-                              onsubmit="return confirm('¿Estás seguro de eliminar este registro?');">
-                            <button type="submit">Eliminar</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <p>No hay registros para mostrar.</p>
-        {% endif %}
-    </div>
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+        <section class="bg-white rounded-2xl shadow-lg ring-1 ring-slate-200/60 p-4 sm:p-6 lg:p-8">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-800">Listado de Personal</h2>
+                    <p class="text-sm text-slate-500 mt-1">
+                        {{ registros|length }}
+                        registro{{ '' if registros|length == 1 else 's' }} en total.
+                    </p>
+                </div>
+            </div>
+
+            {% if registros %}
+            <div class="overflow-x-auto rounded-xl ring-1 ring-slate-200">
+                <table class="min-w-full divide-y divide-slate-200 table-fixed sm:table-auto">
+                    <thead class="hidden sm:table-header-group bg-slate-50">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider w-28">DNI</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Nombre</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Apellido</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Dirección</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider w-32">Teléfono</th>
+                            <th class="px-4 py-3 text-center text-xs font-semibold text-slate-600 uppercase tracking-wider w-28">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 bg-white">
+                        {% for registro in registros %}
+                        <tr class="block sm:table-row hover:bg-slate-50/60 transition-colors">
+
+                            <td class="block sm:table-cell px-4 py-2 sm:py-3
+                                       before:content-[attr(data-label)] before:font-semibold before:text-slate-500 before:uppercase before:text-xs
+                                       sm:before:content-none"
+                                data-label="DNI">
+                                <span class="sm:hidden font-semibold text-slate-500 uppercase text-xs mr-2">DNI:</span>
+                                <span class="font-medium text-slate-800">{{ registro[1] }}</span>
+                            </td>
+
+                            <td class="block sm:table-cell px-4 py-2 sm:py-3"
+                                data-label="Nombre">
+                                <span class="sm:hidden font-semibold text-slate-500 uppercase text-xs mr-2">Nombre:</span>
+                                <span class="text-slate-700">{{ registro[2] }}</span>
+                            </td>
+
+                            <td class="block sm:table-cell px-4 py-2 sm:py-3"
+                                data-label="Apellido">
+                                <span class="sm:hidden font-semibold text-slate-500 uppercase text-xs mr-2">Apellido:</span>
+                                <span class="text-slate-700">{{ registro[3] }}</span>
+                            </td>
+
+                            <td class="block sm:table-cell px-4 py-2 sm:py-3"
+                                data-label="Dirección">
+                                <span class="sm:hidden font-semibold text-slate-500 uppercase text-xs mr-2">Dirección:</span>
+                                <span class="text-slate-600 break-words">{{ registro[4] or '—' }}</span>
+                            </td>
+
+                            <td class="block sm:table-cell px-4 py-2 sm:py-3"
+                                data-label="Teléfono">
+                                <span class="sm:hidden font-semibold text-slate-500 uppercase text-xs mr-2">Teléfono:</span>
+                                <span class="text-slate-600">{{ registro[5] or '—' }}</span>
+                            </td>
+
+                            <td class="block sm:table-cell px-4 py-3 sm:text-center">
+                                <form action="/eliminar/{{ registro[0] }}" method="POST"
+                                      onsubmit="return confirm('¿Estás seguro de eliminar este registro?');"
+                                      class="inline-block">
+                                    <button type="submit"
+                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg
+                                                   bg-red-50 text-red-700 text-sm font-medium
+                                                   hover:bg-red-600 hover:text-white
+                                                   focus:ring-2 focus:ring-red-500/30
+                                                   border border-red-200 transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"/>
+                                        </svg>
+                                        <span>Eliminar</span>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-12 px-4">
+                <div class="mx-auto h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-slate-400" fill="none"
+                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-slate-700 mb-1">No hay registros para mostrar</h3>
+                <p class="text-sm text-slate-500 mb-5">Aún no se ha registrado ningún personal.</p>
+                <a href="/"
+                   class="inline-flex items-center gap-2 px-4 py-2 rounded-lg
+                          bg-brand-600 text-white font-medium hover:bg-brand-700 transition">
+                    Crear el primer registro
+                </a>
+            </div>
+            {% endif %}
+        </section>
+    </main>
+
+    <footer class="text-center text-xs text-slate-400 py-6">
+        Sistema de Registro de Personal
+    </footer>
 </body>
 </html>
