@@ -12,6 +12,22 @@ def conectar_db():
         return psycopg2.connect(db_url)
     raise Exception('DATABASE_URL no está configurada')
 
+def init_db():
+    conn = conectar_db()
+    with conn.cursor() as cursor:
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS personas (
+                id SERIAL PRIMARY KEY,
+                dni VARCHAR(20) NOT NULL UNIQUE,
+                nombre VARCHAR(100) NOT NULL,
+                apellido VARCHAR(100) NOT NULL,
+                direccion TEXT,
+                telefono VARCHAR(20)
+            );
+        """)
+    conn.commit()
+    conn.close()
+
 def crear_persona(dni, nombre, apellido, direccion, telefono):
     conn = conectar_db()
     with conn.cursor() as cursor:
@@ -61,5 +77,6 @@ def eliminar_registro(dni):
     return redirect(url_for('administrar'))
 
 if __name__ == '__main__':
+    init_db()
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
