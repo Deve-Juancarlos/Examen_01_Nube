@@ -71,7 +71,6 @@ def registrar():
 @app.route('/administrar')
 def administrar():
     registros = obtener_registros()
-    # Se pasa 'personas' y 'registros' para mantener compatibilidad con las plantillas
     return render_template('administrar.html', personas=registros, registros=registros)
 
 @app.route('/eliminar/<dni>', methods=['POST'])
