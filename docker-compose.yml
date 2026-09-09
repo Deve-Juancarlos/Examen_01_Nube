@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: db-personas-local
+    environment:
+      POSTGRES_DB: db_personas
+      POSTGRES_USER: admin_personas
+      POSTGRES_PASSWORD: admin123
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  web:
+    build: .
+    container_name: web-personas-local
+    environment:
+      DATABASE_URL: postgresql://admin_personas:admin123@db:5432/db_personas
+      PORT: 5000
+    ports:
+      - "8080:5000"
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
